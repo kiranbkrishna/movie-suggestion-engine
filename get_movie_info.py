@@ -5,7 +5,7 @@ This details can then be used as parameters to search.
 """
 import re
 from os import walk
-from cfg import video_extesions
+from cfg import video_extesions, languages, noise_words
 path = '/home/kiran/nn'
 
 # for dirpath, dirs, files in walk(path):
@@ -14,13 +14,64 @@ def extract_details_from_string(filename):
     assert filename
     current_extension = get_filename_extension(filename)
     if current_extension in video_extesions:
-        possible_years = set(get_possible_years)
+        possible_years = set(get_possible_years(filename))
+        print possible_years
+        possible_languages = set(get_possible_languages(filename))
+        print possible_languages
+        possible_movie_name = get_possible_names(filename, possible_languages, possible_years)
+        print possible_movie_name
     else:
         print 'Invalid file type. Abort details extraction.'
 
 def get_filename_extension(filename):
     assert type(filename) == type("")
     return filename[filename.strip().rfind('.'):]
+
+def get_possible_languages(filename):
+    "Get all possible language values"
+    assert type(filename) == type("")
+    ret = set()
+    for lang in languages:
+        p = re.compile(lang, re.IGNORECASE)
+        values = p.findall(filename) or []
+        if values:
+            values = map(lambda(x):x.lower(), values)
+        ret.update(values)
+    return ret
+
+def get_possible_names(filename, possible_languages, possible_years):
+    "Get the possible movie name"
+    assert isinstance(filename, str)
+    movie_name = filename
+    #1 remove year
+    for year in possible_years:
+        p = re.compile(year, re.IGNORECASE)
+        movie_name = p.sub('', movie_name)
+    #2 remove languages
+    for lang in possible_languages:
+        p = re.compile(lang, re.IGNORECASE)
+        movie_name = p.sub('', movie_name)
+    
+    name_list = re.split('\s+|\.|\-|\_', movie_name)
+    #3 remove noise words
+    name = ""
+    for n in name_list:
+        to_add = True
+        for w in noise_words:
+            p = re.compile(w, re.IGNORECASE)
+            if p.match(n):
+                to_add = False
+                break
+        if to_add:
+            name += (n + " ")
+    #4 chop off the substring from special character occuring index.
+    p = re.compile('[^@#$%^&*()_!+]+')
+    m = p.match(name)
+    if m:
+        name = m.group()
+    else:
+        print 'returning movie name without removal'
+    return name
 
 def get_possible_years(filename):
     "Gets all possible values for years"
