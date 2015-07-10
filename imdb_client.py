@@ -2,6 +2,7 @@
 Module used to get ratings, director, plot and genere of a movie
 using imdbpy
 """
+import difflib
 
 import imdb
 i = imdb.IMDb()
@@ -33,6 +34,13 @@ def get_movie_details(movie):
                  'plot': data.get('plot'),
                   'director':director_name}
         return d
+
+def find_apt_match(movie_name, list_movies):
+    movie_name.strip(' ')
+    final_result = difflib.get_close_matches(movie_name, list_movies, 1)
+    return final_result
+
+
 
 def imdb_details(movie_name, movie_year=None):
     movie = search_movie(movie_name, movie_year)
