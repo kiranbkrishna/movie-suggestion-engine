@@ -22,7 +22,8 @@ def extract_details_from_string(filename):
         print possible_languages
         possible_movie_name = get_possible_names(filename, 
                                 possible_languages,
-                                possible_years)
+                                possible_years,
+                                current_extension)
         print possible_movie_name
         return {'filename': filename,
             'movie_name': possible_movie_name,
@@ -49,21 +50,30 @@ def get_possible_languages(filename):
         ret.update(values)
     return ret
 
-def get_possible_names(filename, possible_languages, possible_years):
+def get_possible_names(filename, possible_languages, possible_years, current_extension):
     "Get the possible movie name"
     assert isinstance(filename, str)
     movie_name = filename
-    #1 remove year
+    #1 remove filename extension
+    p = re.compile(current_extension.strip('.'))
+    movie_name = p.sub('', movie_name)
+
+    #2 remove any websites in the name
+    p = re.compile('[w]{3}.[\w\d]+.[\d\w]{3}')
+    movie_name = p.sub('', movie_name)
+
+    #3 remove year
     for year in possible_years:
         p = re.compile(year, re.IGNORECASE)
         movie_name = p.sub('', movie_name)
-    #2 remove languages
+    
+    #4 remove languages
     for lang in possible_languages:
         p = re.compile(lang, re.IGNORECASE)
         movie_name = p.sub('', movie_name)
     
+    #5 remove noise words
     name_list = re.split('\s+|\.|\-|\_', movie_name)
-    #3 remove noise words
     name = ""
     for n in name_list:
         to_add = True
@@ -74,8 +84,9 @@ def get_possible_names(filename, possible_languages, possible_years):
                 break
         if to_add:
             name += (n + " ")
-    #4 chop off the substring from special character occuring index.
-    p = re.compile('[^\[@#$%^&*()_!+]+')
+    
+    #6 chop off the substring from special character occuring index.
+    p = re.compile('[^\{\(\[@#$%^&*()_!+~]+')
     m = p.match(name)
     if m:
         name = m.group()
@@ -94,12 +105,12 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     path = sys.argv[1]
-    f = open(path + "/out.txt", 'w')
+    f = open(path + "/out.csv", 'w')
     for diname, dirs, files in walk(path):
         for fn in files:
             d = extract_details_from_string(fn)
             if d:
-                s = "%s\t%s\n" %(d['movie_name'], d['filename'])
-                print s
+                s = "%s,%s,%s,%s\n" %(d['movie_name'], d['filename'], d['language'], d['year'])
+                # print s
                 f.write(s)
     f.close()
