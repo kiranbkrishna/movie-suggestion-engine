@@ -25,10 +25,13 @@ def get_movie_details(movie):
         d = None
         if movie:
             data = movie.__dict__['data']
+            director_name = ''
+            if data.get('director'):
+                director_name=data.get('director')[0].get('name')
             d = {'title': data.get('title'),
                  'ratings': data.get('rating'), 
                  'plot': data.get('plot'),
-                  'director':data.get('director')[0].get('name')}
+                  'director':director_name}
         return d
 
 def imdb_details(movie_name, movie_year=None):

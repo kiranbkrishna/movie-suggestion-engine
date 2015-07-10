@@ -5,7 +5,6 @@ This details can then be used as parameters to search.
 """
 import re
 import sys
-import json
 from os import walk
 from imdb_client import imdb_details
 from cfg import video_extesions, languages, noise_words
@@ -107,15 +106,20 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     path = sys.argv[1]
     f = open(path + "/out.csv", 'w')
+    s = "movie_name,title,ratings,director \n"
+    f.write(s)
     for diname, dirs, files in walk(path):
         for fn in files:
             d = extract_details_from_string(fn)
             if d:
-                details = imdb_details(d['movie_name'])
-                if details:
-                    s = "%s,%s,%s,%s\n" %(d['movie_name'], details['title'], details['ratings'], details['director'])
-                else:
-                    s = "unable to find result for " + d['movie_name'] + "\n"
-                print s
-                f.write(s)
+                try:
+                    details = imdb_details(d['movie_name'])
+                    if details:
+                        s = "%s,%s,%s,%s\n" %(d['movie_name'], details['title'], details['ratings'], details['director'])
+                    else:
+                        s = "unable to find result for " + d['movie_name'] + "\n"
+                    print s
+                    f.write(s)
+                except UnicodeEncodeError:
+                    print "codec can't encode character"
     f.close()
