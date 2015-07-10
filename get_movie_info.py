@@ -4,6 +4,8 @@ We try to get the name, year, language of the movie.
 This details can then be used as parameters to search.
 """
 import re
+import sys
+import json
 from os import walk
 from cfg import video_extesions, languages, noise_words
 path = '/home/kiran/nn'
@@ -18,10 +20,18 @@ def extract_details_from_string(filename):
         print possible_years
         possible_languages = set(get_possible_languages(filename))
         print possible_languages
-        possible_movie_name = get_possible_names(filename, possible_languages, possible_years)
+        possible_movie_name = get_possible_names(filename, 
+                                possible_languages,
+                                possible_years)
         print possible_movie_name
+        return {'filename': filename,
+            'movie_name': possible_movie_name,
+            'year': str(possible_years),
+            'language': str(possible_languages)}
+
     else:
         print 'Invalid file type. Abort details extraction.'
+        possible_movie_name = 'NA'
 
 def get_filename_extension(filename):
     assert type(filename) == type("")
@@ -65,7 +75,7 @@ def get_possible_names(filename, possible_languages, possible_years):
         if to_add:
             name += (n + " ")
     #4 chop off the substring from special character occuring index.
-    p = re.compile('[^@#$%^&*()_!+]+')
+    p = re.compile('[^\[@#$%^&*()_!+]+')
     m = p.match(name)
     if m:
         name = m.group()
@@ -81,3 +91,15 @@ def get_possible_years(filename):
 
 if __name__ == '__main__':
     extract_details_from_string("Homely Meals (2014) Malayalam DVDRip x264 AAC 5.1-MBRHDRG.mkv")
+
+if __name__ == '__main__':
+    path = sys.argv[1]
+    f = open(path + "/out.txt", 'w')
+    for diname, dirs, files in walk(path):
+        for fn in files:
+            d = extract_details_from_string(fn)
+            if d:
+                s = "%s\t%s\n" %(d['movie_name'], d['filename'])
+                print s
+                f.write(s)
+    f.close()
