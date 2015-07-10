@@ -12,6 +12,7 @@ noise_words = ['DVDRip', 'BRRip', 'Eng', '~uTorrentPartFile', 'EXTENDED', 'WEBRi
  'Zox', 'RERIP', 'h264',  'XViD', 'WWW', 'DvDSCR', 'YIFY+HI',  'Into', 'Movies', 
  '1CD','BRRG', 'ETRG', 'ZippyMoviez', 'ExtraSceneRG', 'DVDR', '720P', 'ScaryMoVie5',
  'hdrip', 'www', 'Sub', 'HQ', 'txt', 'ESubs', 'Pdvd', 'MOK', 'DTHRip', 'TORRENTS', 
- 'Extended', 'NL', 'mkv', 'aXXo',  'SilverRG',  'AC3', 'brrip', 'a2zRG',  'DDH~RG',  'BRRip', 'MPEG']
+ 'Extended', 'NL', 'mkv', 'aXXo',  'SilverRG',  'AC3', 'brrip', 'a2zRG',  'DDH~RG',  'BRRip', 'MPEG',
+'720p','BluRay','950MB','ShAaNiG','com']
 
 languages = [ 'Hindi', 'English', 'Telugu', 'Malayalam', 'Tamil']
