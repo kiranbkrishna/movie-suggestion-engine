@@ -7,6 +7,7 @@ import re
 import sys
 import json
 from os import walk
+from imdb_client import imdb_details
 from cfg import video_extesions, languages, noise_words
 path = '/home/kiran/nn'
 
@@ -110,7 +111,11 @@ if __name__ == '__main__':
         for fn in files:
             d = extract_details_from_string(fn)
             if d:
-                s = "%s,%s,%s,%s\n" %(d['movie_name'], d['filename'], d['language'], d['year'])
-                # print s
+                details = imdb_details(d['movie_name'])
+                if details:
+                    s = "%s,%s,%s,%s\n" %(d['movie_name'], details['title'], details['ratings'], details['director'])
+                else:
+                    s = "unable to find result for " + d['movie_name'] + "\n"
+                print s
                 f.write(s)
     f.close()
