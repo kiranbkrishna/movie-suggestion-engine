@@ -100,13 +100,11 @@ def get_possible_years(filename):
     p = re.compile('\d{4}')
     return p.findall(filename)
 
-if __name__ == '__main__':
-    extract_details_from_string("Homely Meals (2014) Malayalam DVDRip x264 AAC 5.1-MBRHDRG.mkv")
 
 if __name__ == '__main__':
-    path = sys.argv[1]
+    path = 'E:\\ram\\'
     f = open(path + "/out.csv", 'w')
-    s = "movie_name,title,ratings,director \n"
+    s = "movie_name,title,ratings,director,runtime,genres,plot \n"
     f.write(s)
     for diname, dirs, files in walk(path):
         for fn in files:
@@ -115,7 +113,7 @@ if __name__ == '__main__':
                 try:
                     details = imdb_details(d['movie_name'])
                     if details:
-                        s = "%s,%s,%s,%s\n" %(d['movie_name'], details['title'], details['ratings'], details['director'])
+                        s = "%s,%s,%s,%s,%s,%s,%s\n" %(d['movie_name'], details['title'], details['ratings'], details['director'],details['runtimes'],details['genres'],details['plot'])
                     else:
                         s = "unable to find result for " + d['movie_name'] + "\n"
                     print s

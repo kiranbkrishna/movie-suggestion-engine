@@ -8,20 +8,10 @@ import imdb
 i = imdb.IMDb()
 
 def search_movie(movie_name, movie_year=None):
-    movie_name.strip()
+    movie_name=movie_name.strip()
     movies = i.search_movie(movie_name)
     selected_movie = None
     if movies:
-        # if movie_year:
-        #     # for movie in movies:
-        #     #     if movie_year == movie.data.get('year'):
-        #     #         selected_movie = movie
-        #     #         break
-        #     if movie_year:
-        #         movie_name = movie_name.trim() + ''+movie_year
-        #     selected_movie = find_apt_match(movie_name, movies )
-        # else:
-        #     selected_movie = movies[0]
         if movie_year:
             movie_name = movie_name+ ''+movie_year
         selected_movie = find_apt_match(movie_name, movies )
@@ -35,16 +25,27 @@ def get_movie_details(movie):
         if movie:
             data = movie.__dict__['data']
             director_name = ''
+            runtimes = ''
+            genres = ''
+            plot = ''
             if data.get('director'):
                 director_name=data.get('director')[0].get('name')
+            if data.get('runtimes'):
+                runtimes = ','.join(map(str, data.get('runtimes'))).replace(",", ";");
+            if data.get('genres'):
+                genres = ','.join(map(str, data.get('genres'))).replace(",", ";");
+            if data.get('plot'):
+                plot = ','.join(map(str, data.get('plot'))).replace(",", ";");
             d = {'title': data.get('title'),
                  'ratings': data.get('rating'), 
                  'plot': data.get('plot'),
-                  'director':director_name}
+                  'director':director_name,
+                  'runtimes':runtimes,
+                  'genres':genres,
+                  'plot':plot}
         return d
 
 def find_apt_match(movie_name, list_movies):
-    movie_name.strip(' ')
     final_result = get_close_matches(movie_name, list_movies, 1)
     if final_result:
         return final_result[0]
@@ -66,14 +67,10 @@ def get_close_matches(word, movies, n=3, cutoff=0.6):
            s.ratio() >= cutoff:
             result.append((s.ratio(), x))
 
-    # Move the best scorers to head of list
-    import heapq
-
-    result = heapq.nlargest(n, result)
+    # result = heapq.nlargest(n, result)
+    sorted(result,key=lambda k: k[0])
     # Strip scores for the best n matches
     return [x for score, x in result]
-
-
 
 
 def imdb_details(movie_name, movie_year=None):
@@ -81,5 +78,5 @@ def imdb_details(movie_name, movie_year=None):
     return get_movie_details(movie)
 
 if __name__ == '__main__':
-    movies = i.search_movie('wolves')
-    print get_close_matches('wolves 2014', movies,1)
+    movies = i.search_movie('The Fault in Our Stars')
+    # print get_close_matches_movies('appel', ['ape', 'apple', 'peach', 'puppy'], n= 3)
