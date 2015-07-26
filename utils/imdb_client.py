@@ -29,7 +29,7 @@ def get_movie_details(movie):
             genres = ''
             plot = ''
             if data.get('director'):
-                director_name=data.get('director')[0].get('name')
+                director_name = data.get('director')[0].get('name')
             if data.get('runtimes'):
                 runtimes = ','.join(map(str, data.get('runtimes'))).replace(",", ";");
             if data.get('genres'):
