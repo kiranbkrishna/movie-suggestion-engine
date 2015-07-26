@@ -6,8 +6,8 @@ This details can then be used as parameters to search.
 import re
 import sys
 from os import walk
-from imdb_client import imdb_details
-from cfg import video_extesions, languages, noise_words
+from utils.imdb_client import imdb_details
+from conf.cfg import video_extesions, languages, noise_words
 path = '/home/kiran/nn'
 
 # for dirpath, dirs, files in walk(path):
@@ -102,7 +102,7 @@ def get_possible_years(filename):
 
 
 if __name__ == '__main__':
-    path = 'E:\\ram\\'
+    path = '/home/kiran/nn'
     f = open(path + "/out.csv", 'w')
     s = "movie_name,title,ratings,director,runtime,genres,plot \n"
     f.write(s)
