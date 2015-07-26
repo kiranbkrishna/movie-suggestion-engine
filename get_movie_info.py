@@ -5,17 +5,10 @@ This details can then be used as parameters to search.
 """
 import re
 import sys
-<<<<<<< Updated upstream
 from os import walk
+from optparse import OptionParser
 from utils.imdb_client import imdb_details
 from conf.cfg import video_extesions, languages, noise_words
-=======
-from optparse import OptionParser 
-from os import sep, walk
-from imdb_client import imdb_details
-from cfg import video_extesions, languages, noise_words
->>>>>>> Stashed changes
-path = '/home/kiran/nn'
 
 # for dirpath, dirs, files in walk(path):
 
@@ -112,13 +105,13 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-p', '--path', dest='path', help='Path to movies')
     parser.add_option('-m', '--movie', dest='movie', help='name of the movie')
-    parser.add_option('-p', '--outpath', dest='outpath', help='directory where output file should be generated')
+    parser.add_option('-o', '--outpath', dest='outpath', help='directory where output file should be generated')
     (options, args) = parser.parse_args()
     print options
     print args
-    movie = options.get('movie')
-    path = options.get('path')
-    out = options.get('outpath')
+    movie = options.movie
+    path = options.path
+    out = options.outpath
     
     if path:
         if not path.endswith(sep):
@@ -146,3 +139,5 @@ if __name__ == '__main__':
     elif movie:
         d = extract_details_from_string(movie)
         print d
+    else:
+        parser.print_help()
