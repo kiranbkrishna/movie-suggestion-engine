@@ -107,8 +107,6 @@ if __name__ == '__main__':
     parser.add_option('-m', '--movie', dest='movie', help='name of the movie')
     parser.add_option('-o', '--outpath', dest='outpath', help='directory where output file should be generated')
     (options, args) = parser.parse_args()
-    print options
-    print args
     movie = options.movie
     path = options.path
     out = options.outpath
